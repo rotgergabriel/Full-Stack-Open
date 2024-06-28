@@ -1,33 +1,109 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import './Statistic.css'
 
-function App() {
-  const [count, setCount] = useState(0)
+const Title = ({props}) => {
+  return(
+    <>
+      <h1>{props}</h1>
+    </>
+  )
+}
+
+const Buttons = ({onClick, value}) => {
+  return (
+    <>
+      <button onClick={onClick}>{value}</button>
+    </>
+  )
+}
+
+const StatisticLine = ({ props, value }) => {
+  return (
+    <>
+      <table>
+        <tbody>
+          <tr>
+            <td className="table--td">{value}</td>
+            <td className="table--td">{props}</td>
+          </tr>
+        </tbody>
+      </table>
+    </>
+  )
+}
+
+const Statistics = ({
+    good, 
+    neutral, 
+    bad, 
+    all, 
+    average, 
+    positive
+  }) => {
+
+  const feedBackText = 'No feedback given'
+
+  if(all === 0) {
+    return(
+      <h3>{feedBackText}</h3>
+    )
+  }
 
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <StatisticLine props={good} value={'Good'} />
+      <StatisticLine props={neutral} value={'Neutral'} />
+      <StatisticLine props={bad} value={'Bad'} />
+      <StatisticLine props={all} value={'All'} />
+      <StatisticLine props={average} value={'Average'} />
+      <StatisticLine props={positive} value={'Positive'} />
+    </>
+  )
+}
+
+const App = () => {
+  //App data management
+  const TitleProps = {
+    title: 'Give feedback',
+    secondTitle: 'Statistics'
+  }
+  
+  const [good, setGood] = useState(0)
+  const [neutral, setNeutral] = useState(0)
+  const [bad, setBad] = useState(0)
+
+  const handleGoodClicks = () => {
+      setGood(good + 1)
+  }
+
+  const handleNeutralClicks = () => {
+      setNeutral(neutral + 1)
+  }
+
+  const handleBadClicks = () => {
+      setBad(bad + 1)
+  }
+
+  const all = good + neutral + bad
+  const average = ((good + neutral + bad) / 3).toFixed(1)
+  const positive = ((good * 100 ) / all).toFixed(1)
+
+  return (
+    <>
+      <Title props={TitleProps.title} />
+      <Buttons onClick={handleGoodClicks} value={'Good'}/>
+      <Buttons onClick={handleNeutralClicks} value={'Neutral'}/>
+      <Buttons onClick={handleBadClicks} value={'Bad'}/>
+      <br />
+      <Title props={TitleProps.secondTitle} />
+      <Statistics
+        good={good}
+        neutral={neutral}
+        bad={bad}
+        all={all}
+        average={average}
+        positive={positive}
+      />
     </>
   )
 }
